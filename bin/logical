@@ -1,5 +1,26 @@
 #!/usr/bin/env ruby
 require 'logical'
-require 'ripl'
 
-Ripl.start
+if ARGV[0] == "repl"
+  require 'ripl'
+  Ripl.start
+  exit
+end
+
+def ask(prompt)
+  print prompt
+  gets.chomp
+end
+
+loop do
+  line = ask('> ')
+
+  break if line == 'quit' or line == 'exit'
+
+  begin
+    ast = Logical::Parser.parse(Logical::Lexer.lex(line))
+    p ast
+  rescue RLTK::NotInLanguage
+    puts 'Line was not in language.'
+  end
+end

@@ -1,7 +1,5 @@
-module Logical
-  autoload :Lexer, "logical/lexer"
-  autoload :Parser, "logical/parser"
-end
+module Logical; end
 
-#require 'logical/lexer'
-#require 'logical/parser'
+require 'logical/parser'
+require 'logical/lexer'
+require 'logical/ast'
