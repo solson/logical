@@ -12,6 +12,26 @@ def ask(prompt)
   gets.chomp
 end
 
+def string_eval(line, context)
+  ast = Logical::Parser.parse(Logical::Lexer.lex(line))
+  puts ast.inspect + " => " + ast.evaluate(context).inspect
+rescue RLTK::NotInLanguage
+  puts 'Line was not in language.'
+rescue Exception => e
+  puts e.to_s
+end
+
+def truth_table(line)
+  ast = Logical::Parser.parse(Logical::Lexer.lex(line))
+  situations = [true,false].repeated_permutation(ast.vars.count)
+  contexts = situations.map{|xs| Hash[*ast.vars.zip(xs).flatten(1)] }
+  table = contexts.map do |context|
+    [context, ast.evaluate(context)]
+  end
+  require 'pp'
+  pp table
+end
+
 context = {}
 loop do
   begin
@@ -23,12 +43,9 @@ loop do
 
   break if line == 'quit' or line == 'exit'
 
-  begin
-    ast = Logical::Parser.parse(Logical::Lexer.lex(line))
-    puts ast.inspect + " => " + ast.evaluate(context).inspect
-  rescue RLTK::NotInLanguage
-    puts 'Line was not in language.'
-  rescue Exception => e
-    puts e.to_s
+  if line =~ /^table\s*(.*)$/
+    truth_table($1)
+  else
+    string_eval(line, context)
   end
 end
