@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'rltk/ast'
 
 class Class
@@ -17,7 +18,7 @@ module Logical
     end
 
     def evaluate(context)
-      context[name]
+      context[name] || raise("Undefined variable '#{name}'")
     end
   end
 
@@ -45,7 +46,7 @@ module Logical
     child :arg, Expression
 
     def inspect
-      "#{self.class.basename}(#{arg.inspect})"
+      self.class::SYMBOL + arg.inspect
     end
   end
 
@@ -54,35 +55,40 @@ module Logical
     child :right, Expression
 
     def inspect
-      "#{self.class.basename}(#{left.inspect}, #{right.inspect})"
+      "(#{left.inspect} #{self.class::SYMBOL} #{right.inspect})"
     end
   end
 
   class Not < UnaryFn
+    SYMBOL = "¬"
     def evaluate(context)
       not arg.evaluate(context)
     end
   end
 
   class And < BinaryFn
+    SYMBOL = "∧"
     def evaluate(context)
       left.evaluate(context) and right.evaluate(context)
     end
   end
 
   class Or < BinaryFn
+    SYMBOL = "∨"
     def evaluate(context)
       left.evaluate(context) or right.evaluate(context)
     end
   end
 
   class Implies < BinaryFn
+    SYMBOL = "→"
     def evaluate(context)
       (not left.evaluate(context)) or right.evaluate(context)
     end
   end
 
   class Equivalent < BinaryFn
+    SYMBOL = "↔"
     def evaluate(context)
       left.evaluate(context) == right.evaluate(context)
     end
