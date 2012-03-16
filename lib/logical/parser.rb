@@ -3,7 +3,9 @@ require 'rltk/parser'
 module Logical
   class Parser < RLTK::Parser
     production(:e) do
-      clause('VAR') { |x| Variable.new(x) }
+      clause('VAR')   { |x| Variable.new(x) }
+      clause('TRUE')  { |_| True.new }
+      clause('FALSE') { |_| False.new }
 
       clause('NOT e')          { |_, x|    Not.new(x)          }
       clause('e AND e')        { |x, _, y| And.new(x,y)        }

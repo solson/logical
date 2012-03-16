@@ -21,6 +21,26 @@ module Logical
     end
   end
 
+  class True < Expression
+    def inspect
+      "true"
+    end
+
+    def evaluate(context)
+      true
+    end
+  end
+
+  class False < Expression
+    def inspect
+      "false"
+    end
+
+    def evaluate(context)
+      false
+    end
+  end
+
   class UnaryFn < Expression
     child :arg, Expression
 
