@@ -7,6 +7,7 @@ module Logical
       clause('TRUE')  { |_| True.new }
       clause('FALSE') { |_| False.new }
 
+      clause('VAR DEFINE e')   { |x, _, y| Define.new(x,y)     }
       clause('NOT e')          { |_, x|    Not.new(x)          }
       clause('e AND e')        { |x, _, y| And.new(x,y)        }
       clause('e OR e')         { |x, _, y| Or.new(x,y)         }

@@ -18,6 +18,8 @@ class Logical::Lexer < RLTK::Lexer
   rule(/true/)  { :TRUE }
   rule(/false/) { :FALSE }
 
+  rule(/:=/)    { :DEFINE }
+
   rule(/[A-Z]/) { |t| [:VAR, t] }
 
   rule(/\s/)

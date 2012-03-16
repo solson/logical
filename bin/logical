@@ -12,6 +12,7 @@ def ask(prompt)
   gets.chomp
 end
 
+context = {}
 loop do
   begin
     line = ask('> ')
@@ -24,10 +25,10 @@ loop do
 
   begin
     ast = Logical::Parser.parse(Logical::Lexer.lex(line))
-    puts ast.inspect + " => " + ast.evaluate({}).inspect
+    puts ast.inspect + " => " + ast.evaluate(context).inspect
   rescue RLTK::NotInLanguage
     puts 'Line was not in language.'
-  rescue => e
-    puts e.message
+  rescue Exception => e
+    puts e.to_s
   end
 end

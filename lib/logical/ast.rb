@@ -18,7 +18,8 @@ module Logical
     end
 
     def evaluate(context)
-      context[name] || raise("Undefined variable '#{name}'")
+      raise "Undefined variable '#{name}'" unless context.key?(name)
+      context[name]
     end
   end
 
@@ -39,6 +40,19 @@ module Logical
 
     def evaluate(context)
       false
+    end
+  end
+
+  class Define < Expression
+    value :var,  String
+    child :expr, Expression
+
+    def inspect
+      "#{var} := #{expr.inspect}"
+    end
+
+    def evaluate(context)
+      context[var] = expr.evaluate(context)
     end
   end
 
