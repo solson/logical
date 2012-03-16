@@ -15,6 +15,10 @@ module Logical
     def inspect
       name
     end
+
+    def evaluate(context)
+      context[name]
+    end
   end
 
   class UnaryFn < Expression
@@ -34,9 +38,33 @@ module Logical
     end
   end
 
-  class Not < UnaryFn; end
-  class And < BinaryFn; end
-  class Or < BinaryFn; end
-  class Implies < BinaryFn; end
-  class Equivalent < BinaryFn; end
+  class Not < UnaryFn
+    def evaluate(context)
+      not arg.evaluate(context)
+    end
+  end
+
+  class And < BinaryFn
+    def evaluate(context)
+      left.evaluate(context) and right.evaluate(context)
+    end
+  end
+
+  class Or < BinaryFn
+    def evaluate(context)
+      left.evaluate(context) or right.evaluate(context)
+    end
+  end
+
+  class Implies < BinaryFn
+    def evaluate(context)
+      (not left.evaluate(context)) or right.evaluate(context)
+    end
+  end
+
+  class Equivalent < BinaryFn
+    def evaluate(context)
+      left.evaluate(context) == right.evaluate(context)
+    end
+  end
 end
