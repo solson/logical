@@ -24,8 +24,10 @@ loop do
 
   begin
     ast = Logical::Parser.parse(Logical::Lexer.lex(line))
-    p ast
+    puts ast.inspect + " => " + ast.evaluate({}).inspect
   rescue RLTK::NotInLanguage
     puts 'Line was not in language.'
+  rescue => e
+    puts e.message
   end
 end
