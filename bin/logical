@@ -13,7 +13,12 @@ def ask(prompt)
 end
 
 loop do
-  line = ask('> ')
+  begin
+    line = ask('> ')
+  rescue StandardError, Interrupt
+    puts
+    exit
+  end
 
   break if line == 'quit' or line == 'exit'
 
