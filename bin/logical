@@ -21,6 +21,23 @@ rescue Exception => e
   puts e.to_s
 end
 
+def ascii_table(table, vars, expr)
+  vars.sort!
+  vars_width = vars.count * 2
+  expr_width = expr.inspect.length + 1
+
+  out = ''
+  out << vars.join(' ') << ' | ' << expr.inspect << "\n"
+  out << ('-' * vars_width) << '+' << ('-' * (expr_width)) << "\n"
+  table.each do |context, value|
+    vars.each do |var|
+      out << (context[var] ? 'T' : 'F') << ' '
+    end
+    out << '| ' << (value ? 'T' : 'F') << "\n"
+  end
+  out
+end
+
 def truth_table(line)
   ast = Logical::Parser.parse(Logical::Lexer.lex(line))
   situations = [true,false].repeated_permutation(ast.vars.count)
@@ -28,8 +45,7 @@ def truth_table(line)
   table = contexts.map do |context|
     [context, ast.evaluate(context)]
   end
-  require 'pp'
-  pp table
+  puts ascii_table(table, ast.vars, ast)
 end
 
 context = {}
