@@ -8,7 +8,11 @@ class Class
 end
 
 module Logical
-  class Expression < RLTK::ASTNode; end
+  class Expression < RLTK::ASTNode
+    def vars
+      []
+    end
+  end
 
   class Variable < Expression
     value :name, String
@@ -20,6 +24,10 @@ module Logical
     def evaluate(context)
       raise "Undefined variable '#{name}'" unless context.key?(name)
       context[name]
+    end
+
+    def vars
+      [name]
     end
   end
 
@@ -62,6 +70,10 @@ module Logical
     def inspect
       self.class::SYMBOL + arg.inspect
     end
+
+    def vars
+      arg.vars
+    end
   end
 
   class BinaryFn < Expression
@@ -70,6 +82,10 @@ module Logical
 
     def inspect
       "(#{left.inspect} #{self.class::SYMBOL} #{right.inspect})"
+    end
+
+    def vars
+      (left.vars + right.vars).uniq
     end
   end
 
